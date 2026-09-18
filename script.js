@@ -18,32 +18,41 @@ async function retornarconteudo(){
 
     for(let n=0;(n < dados.length);n++){
         const div = document.createElement('div');
-        div.innerHTML = `<fieldset><strong>${dados[n].id}.<br>
-                        TÍTULO:</strong> ${dados[n].title}<br><br>
-                        <strong>CONTEÚDO:</strong> ${dados[n].body}
+        div.innerHTML = `<fieldset><h1>${dados[n].title}</h1>
+                                        ${dados[n].body}
                         </fieldset>`
         caixaconteudo.append(div);
+    
+    document.querySelector("h2").innerHTML ="";
 };
 };
 
 async function enviartexto(){
-    let title = document.querySelector("#title").value;
-    let texto = document.querySelector("#texto").value;
+    let titleDOM = document.querySelector("#title");
+    let textoDOM = document.querySelector("#texto");
+
+    if(titleDOM.value === "" || textoDOM.value === ""){
+        alert("não é permitido envio de texto vazio.");
+        return;
+    };
 
     const obj = {method:"POST",
-                headers:{
-                    "content-type":"application/json"},
-                body:JSON.stringify({title:title,
-                                    body:texto})
-                }
+            headers:{
+                "content-type":"application/json"},
+            body:JSON.stringify({title:titleDOM.value,
+                                body:textoDOM.value})
+            };
+    
     try{
         const response = await fetch("https://jsonplaceholder.typicode.com/posts",obj);
         const dados = await response.json();
         console.log(dados);
 
-    }catch(erro){console.log(erro)
+    } catch(erro) {console.log(erro);
 
-    }finally{console.log("requisição encerrada")};
+    } finally {titleDOM.value = "";
+                textoDOM.value ="";
+    };
 };
 
 let caixaconteudo = document.querySelector(".conteudo");
